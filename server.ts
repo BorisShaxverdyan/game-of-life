@@ -1,7 +1,7 @@
 import * as express from "express";
 import * as http from "http";
 import { Server } from "socket.io";
-import { generateMatrix, matrix } from "./globals";
+import { generateMatrix, matrix, setInitialEntities, updateEntities } from "./globals";
 
 // #region Server stuff
 const port = 3000;
@@ -25,15 +25,18 @@ const io = new Server(server);
 
 // #region game
 generateMatrix(10, 10);
+setInitialEntities(5);
 // #endregion
 
 io.on("connection", socket => {
 	console.log("connected: ", socket.id);
 
 	setInterval(() => {
+		updateEntities();
+
 		socket.emit("data", {
 			matrix,
 		});
-	}, 1000);
+	}, 500);
 });
 // #endregion

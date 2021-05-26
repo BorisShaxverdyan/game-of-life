@@ -10,7 +10,7 @@ export default class Grass {
 
 	constructor(x: number, y: number) {
 		this.x = x;
-		this.y = x;
+		this.y = y;
 		this.index = 1;
 		this.energy = 0;
 
