@@ -1,6 +1,7 @@
 import * as express from "express";
 import * as http from "http";
 import { Server } from "socket.io";
+import { generateMatrix, matrix } from "./globals";
 
 // #region Server stuff
 const port = 3000;
@@ -22,12 +23,17 @@ server.listen(port, function () {
 // #region socket connection
 const io = new Server(server);
 
+// #region game
+generateMatrix(10, 10);
+// #endregion
+
 io.on("connection", socket => {
 	console.log("connected: ", socket.id);
 
 	setInterval(() => {
-		// socket.emit("data", {
-		// });
+		socket.emit("data", {
+			matrix,
+		});
 	}, 1000);
 });
 // #endregion
