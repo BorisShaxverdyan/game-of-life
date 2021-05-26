@@ -11,7 +11,7 @@ function setup() {
 	socket.on("data", data => {
 		const matrix = data.matrix;
 
-        console.log(matrix);
+		console.log(matrix);
 
 		createCanvas(matrix[0].length * side, matrix.length * side);
 		background(backgroundColor);
@@ -20,6 +20,8 @@ function setup() {
 			for (let j = 0; j < matrix[i].length; j++) {
 				if (matrix[i][j] === 1) {
 					fill("green");
+				} else if (matrix[i][j] === 2) {
+					fill("yellow");
 				} else {
 					fill(backgroundColor);
 				}

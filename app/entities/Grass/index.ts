@@ -2,11 +2,11 @@ import { grassArr, matrix } from "../../../globals";
 import { random } from "./../../../helpers";
 
 export default class Grass {
-	private x: number;
-	private y: number;
-	private index: number;
-	private energy: number;
-	private directions: [number, number][];
+	public x: number;
+	public y: number;
+	public index: number;
+	public energy: number;
+	public directions: [number, number][];
 
 	constructor(x: number, y: number) {
 		this.x = x;
