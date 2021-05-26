@@ -1,0 +1,44 @@
+{
+	"name": "game-of-life",
+	"version": "0.0.1",
+	"description": "Game of life by Boris Shakhverdyan",
+	"main": "index.js",
+	"scripts": {
+		"build": "webpack --progress",
+		"watch": "webpack --watch --progress",
+		"server": "nodemon server.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/BorisShaxverdyan/game-of-life.git"
+	},
+	"keywords": [
+		"game",
+		"of",
+		"life"
+	],
+	"author": "Boris Shakhverdyan <boris.shaxverdyan@tumo.org>",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/BorisShaxverdyan/game-of-life/issues"
+	},
+	"homepage": "https://github.com/BorisShaxverdyan/game-of-life#readme",
+	"dependencies": {
+		"express": "^4.17.1",
+		"lodash": "^4.17.21",
+		"socket.io": "^4.1.2"
+	},
+	"devDependencies": {
+		"@types/express": "^4.17.12",
+		"@types/lodash": "^4.14.170",
+		"@types/webpack-dev-middleware": "^4.3.0",
+		"nodemon": "^2.0.7",
+		"ts-loader": "^9.2.2",
+		"typescript": "^4.2.4",
+		"webpack": "^5.37.1",
+		"webpack-cli": "^4.7.0",
+		"webpack-dev-middleware": "^4.3.0",
+		"webpack-dev-server": "^3.11.2",
+		"webpack-node-externals": "^3.0.0"
+	}
+}
