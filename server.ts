@@ -25,7 +25,11 @@ const io = new Server(server);
 
 // #region game
 generateMatrix(10, 10);
-setInitialEntities(5, 2);
+setInitialEntities({
+	grass: 7,
+	sheep: 3,
+	wolf: 1
+});
 // #endregion
 
 io.on("connection", socket => {

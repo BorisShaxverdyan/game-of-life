@@ -22,6 +22,8 @@ function setup() {
 					fill("green");
 				} else if (matrix[i][j] === 2) {
 					fill("yellow");
+				} else if (matrix[i][j] === 3) {
+					fill("red");
 				} else {
 					fill(backgroundColor);
 				}

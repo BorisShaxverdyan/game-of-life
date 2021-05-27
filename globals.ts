@@ -1,5 +1,6 @@
 import Grass from "./app/entities/Grass";
 import Sheep from "./app/entities/Sheep";
+import Wolf from "./app/entities/Wolf";
 import { random } from "./helpers";
 
 export type MatrixType = number[][];
@@ -7,6 +8,7 @@ export type MatrixType = number[][];
 export const matrix: MatrixType = [];
 export const grassArr: Grass[] = [];
 export const sheepArr: Sheep[] = [];
+export const wolfArr: Wolf[] = [];
 
 export const generateMatrix = (width: number, height: number): MatrixType => {
 	for (let y: number = 0; y < height; y++) {
@@ -40,17 +42,29 @@ export const setRandom = (value: number): [number, number] => {
 	return [x, y];
 };
 
-export const setInitialEntities = (grassCount: number, sheepCount: number) => {
-	while (grassCount) {
+type CountsType = {
+	grass: number;
+	sheep: number;
+	wolf: number;
+};
+
+export const setInitialEntities = (counts: CountsType) => {
+	while (counts.grass) {
 		let coords = setRandom(1);
 		grassArr.push(new Grass(...coords));
-		grassCount--;
+		counts.grass--;
 	}
 
-	while (sheepCount) {
+	while (counts.sheep) {
 		let coords = setRandom(2);
 		sheepArr.push(new Sheep(...coords));
-		sheepCount--;
+		counts.sheep--;
+	}
+
+	while (counts.wolf) {
+		let coords = setRandom(3);
+		wolfArr.push(new Wolf(...coords));
+		counts.wolf--;
 	}
 };
 
@@ -64,5 +78,12 @@ export const updateEntities = () => {
 		sheep.eat();
 		sheep.multiply();
 		sheep.die();
+	});
+
+	wolfArr.map(wolf => {
+		wolf.move();
+		wolf.eat();
+		wolf.multiply();
+		wolf.die();
 	});
 };
