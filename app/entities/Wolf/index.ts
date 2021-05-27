@@ -13,7 +13,7 @@ export default class Wolf {
 		this.x = x;
 		this.y = y;
 		this.index = 3;
-		this.energy = 15;
+		this.energy = 30;
 
 		this.directions = [
 			[this.x - 1, this.y - 1],
@@ -62,7 +62,7 @@ export default class Wolf {
 	public multiply = () => {
 		const newCell: [number, number] | null = random(this.chooseCell(0));
 
-		if (newCell && this.energy >= 25) {
+		if (newCell && this.energy >= 60) {
 			const newX = newCell[0];
 			const newY = newCell[1];
 
@@ -70,7 +70,7 @@ export default class Wolf {
 
 			wolfArr.push(new Wolf(newX, newY));
 
-			this.energy = 5;
+			this.energy = 20;
 		}
 	};
 
@@ -113,7 +113,7 @@ export default class Wolf {
 			this.x = newX;
 			this.y = newY;
 
-			this.energy += 5;
+			this.energy += 20;
 		}
 	};
 }

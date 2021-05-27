@@ -13,7 +13,7 @@ export default class Sheep {
 		this.x = x;
 		this.y = y;
 		this.index = 2;
-		this.energy = 5;
+		this.energy = 30;
 
 		this.directions = [
 			[this.x - 1, this.y - 1],
@@ -62,7 +62,7 @@ export default class Sheep {
 	public multiply = () => {
 		const newCell: [number, number] | null = random(this.chooseCell(0));
 
-		if (newCell && this.energy >= 10) {
+		if (newCell && this.energy >= 60) {
 			const newX = newCell[0];
 			const newY = newCell[1];
 
@@ -70,7 +70,7 @@ export default class Sheep {
 
 			sheepArr.push(new Sheep(newX, newY));
 
-			this.energy = 5;
+			this.energy = 20;
 		}
 	};
 
@@ -113,7 +113,7 @@ export default class Sheep {
 			this.x = newX;
 			this.y = newY;
 
-			this.energy += 3;
+			this.energy += 5;
 		}
 	};
 }

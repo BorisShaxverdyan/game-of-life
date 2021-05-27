@@ -24,11 +24,11 @@ server.listen(port, function () {
 const io = new Server(server);
 
 // #region game
-generateMatrix(10, 10);
+generateMatrix(25, 25);
 setInitialEntities({
-	grass: 7,
-	sheep: 3,
-	wolf: 1
+	grass: 50,
+	sheep: 10,
+	wolf: 2
 });
 // #endregion
 
