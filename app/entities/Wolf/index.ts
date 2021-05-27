@@ -113,7 +113,7 @@ export default class Wolf {
 			this.x = newX;
 			this.y = newY;
 
-			this.energy += 20;
+			this.energy += 30;
 		}
 	};
 }

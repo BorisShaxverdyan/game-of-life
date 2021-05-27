@@ -21,7 +21,6 @@ export default class EdibleHerb {
 		if (this.life % 10 === 0 && this.level < this.indexes.length - 1) {
             this.level++;
             
-            console.log("entered", this.life, this.level, this.indexes[this.level]);
 			matrix[this.y][this.x] = this.indexes[this.level];
 		}
 	};

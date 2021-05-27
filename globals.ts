@@ -1,5 +1,6 @@
 import EdibleHerb from "./app/entities/EdibleHerb";
 import Grass from "./app/entities/Grass";
+import Human from "./app/entities/Human";
 import Sheep from "./app/entities/Sheep";
 import Wolf from "./app/entities/Wolf";
 import { random } from "./helpers";
@@ -11,6 +12,7 @@ export const grassArr: Grass[] = [];
 export const sheepArr: Sheep[] = [];
 export const wolfArr: Wolf[] = [];
 export const edibleHerbArr: EdibleHerb[] = [];
+export const humanArr: Human[] = [];
 
 export const generateMatrix = (width: number, height: number): MatrixType => {
 	for (let y: number = 0; y < height; y++) {
@@ -49,6 +51,7 @@ type CountsType = {
 	sheep: number;
 	wolf: number;
 	edibleHerb: number;
+	human: number;
 };
 
 export const setInitialEntities = (counts: CountsType) => {
@@ -75,6 +78,12 @@ export const setInitialEntities = (counts: CountsType) => {
 		edibleHerbArr.push(new EdibleHerb(...coords));
 		counts.edibleHerb--;
 	}
+
+	while (counts.human) {
+		let coords = setRandom(5);
+		humanArr.push(new Human(...coords));
+		counts.human--;
+	}
 };
 
 export const updateEntities = () => {
@@ -87,6 +96,7 @@ export const updateEntities = () => {
 		sheep.eat();
 		sheep.multiply();
 		sheep.die();
+		sheep.energy--;
 	});
 
 	wolfArr.map(wolf => {
@@ -94,9 +104,19 @@ export const updateEntities = () => {
 		wolf.eat();
 		wolf.multiply();
 		wolf.die();
+		wolf.energy--;
 	});
 
 	edibleHerbArr.map(edibleHerb => {
 		edibleHerb.grow();
+	});
+
+	humanArr.map(human => {
+		human.eat();
+		human.move();
+		human.plantASeed();
+		human.multiply();
+		human.die();
+		human.hunger--;
 	});
 };

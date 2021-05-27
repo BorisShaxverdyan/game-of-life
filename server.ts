@@ -29,7 +29,8 @@ setInitialEntities({
 	grass: 50,
 	sheep: 10,
 	wolf: 2,
-	edibleHerb: 5
+	edibleHerb: 0,
+	human: 2
 });
 // #endregion
 

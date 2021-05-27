@@ -3,7 +3,7 @@
 const socket = io();
 
 function setup() {
-	strokeWeight(1);
+	noStroke();
 
 	const side = 30;
 	const backgroundColor = "#acacac";
@@ -23,10 +23,10 @@ function setup() {
 						fill("green");
 						break;
 					case 2:
-						fill("yellow");
+						fill("white");
 						break;
 					case 3:
-						fill("red");
+						fill(114, 140, 242);
 						break;
 					case 40:
 						fill(92, 247, 87);
@@ -42,6 +42,9 @@ function setup() {
 						break;
 					case 44:
 						fill(10, 94, 8);
+						break;
+					case 5:
+						fill(240, 213, 79);
 						break;
 					default:
 						fill(backgroundColor);
