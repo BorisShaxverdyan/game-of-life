@@ -28,7 +28,8 @@ generateMatrix(25, 25);
 setInitialEntities({
 	grass: 50,
 	sheep: 10,
-	wolf: 2
+	wolf: 2,
+	edibleHerb: 5
 });
 // #endregion
 

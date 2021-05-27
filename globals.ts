@@ -1,3 +1,4 @@
+import EdibleHerb from "./app/entities/EdibleHerb";
 import Grass from "./app/entities/Grass";
 import Sheep from "./app/entities/Sheep";
 import Wolf from "./app/entities/Wolf";
@@ -9,6 +10,7 @@ export const matrix: MatrixType = [];
 export const grassArr: Grass[] = [];
 export const sheepArr: Sheep[] = [];
 export const wolfArr: Wolf[] = [];
+export const edibleHerbArr: EdibleHerb[] = [];
 
 export const generateMatrix = (width: number, height: number): MatrixType => {
 	for (let y: number = 0; y < height; y++) {
@@ -46,6 +48,7 @@ type CountsType = {
 	grass: number;
 	sheep: number;
 	wolf: number;
+	edibleHerb: number;
 };
 
 export const setInitialEntities = (counts: CountsType) => {
@@ -66,6 +69,12 @@ export const setInitialEntities = (counts: CountsType) => {
 		wolfArr.push(new Wolf(...coords));
 		counts.wolf--;
 	}
+
+	while (counts.edibleHerb) {
+		let coords = setRandom(40);
+		edibleHerbArr.push(new EdibleHerb(...coords));
+		counts.edibleHerb--;
+	}
 };
 
 export const updateEntities = () => {
@@ -85,5 +94,9 @@ export const updateEntities = () => {
 		wolf.eat();
 		wolf.multiply();
 		wolf.die();
+	});
+
+	edibleHerbArr.map(edibleHerb => {
+		edibleHerb.grow();
 	});
 };
