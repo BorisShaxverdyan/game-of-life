@@ -72,6 +72,8 @@ export default class Sheep {
 
 			this.energy = 20;
 		}
+
+		return this;
 	};
 
 	public move = () => {
@@ -88,6 +90,8 @@ export default class Sheep {
 			this.y = newY;
 			this.energy--;
 		}
+
+		return this;
 	};
 
 	public die = () => {
@@ -96,6 +100,8 @@ export default class Sheep {
 
 			_.remove(sheepArr, sheep => this.x === sheep.x && this.y === sheep.y);
 		}
+
+		return this;
 	};
 
 	public eat = () => {
@@ -139,5 +145,7 @@ export default class Sheep {
 			this.x = newX;
 			this.y = newY;
 		}
+
+		return this;
 	};
 }

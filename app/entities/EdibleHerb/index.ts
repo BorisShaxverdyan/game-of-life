@@ -18,9 +18,9 @@ export default class EdibleHerb {
 	public grow = () => {
 		this.life++;
 
-		if (this.life % 10 === 0 && this.level < this.indexes.length - 1) {
-            this.level++;
-            
+		if (this.life % 4 === 0 && this.level < this.indexes.length - 1) {
+			this.level++;
+
 			matrix[this.y][this.x] = this.indexes[this.level];
 		}
 	};

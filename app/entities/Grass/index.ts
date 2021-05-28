@@ -1,52 +1,21 @@
 import { grassArr, matrix } from "../../../globals";
+import AbstractEntity from "../AbstractEntity";
+import { ChooseCellItem } from "../AbstractEntity/types";
 import { random } from "./../../../helpers";
 
-export default class Grass {
-	public x: number;
-	public y: number;
-	public index: number;
+export default class Grass extends AbstractEntity {
 	public energy: number;
-	public directions: [number, number][];
 
 	constructor(x: number, y: number) {
-		this.x = x;
-		this.y = y;
-		this.index = 1;
+		super(x, y, 1);
+
 		this.energy = 0;
-
-		this.directions = [
-			[this.x - 1, this.y - 1],
-			[this.x, this.y - 1],
-			[this.x + 1, this.y - 1],
-			[this.x - 1, this.y],
-			[this.x + 1, this.y],
-			[this.x - 1, this.y + 1],
-			[this.x, this.y + 1],
-			[this.x + 1, this.y + 1],
-		];
 	}
-
-	private chooseCell = (index: number) => {
-		const found = [];
-
-		for (let i in this.directions) {
-			let x = this.directions[i][0];
-			let y = this.directions[i][1];
-
-			if (x >= 0 && x < matrix[0].length && y >= 0 && y < matrix.length) {
-				if (matrix[y][x] == index) {
-					found.push(this.directions[i]);
-				}
-			}
-		}
-
-		return found;
-	};
 
 	public multiply = () => {
 		this.energy++;
 
-		const newCell: [number, number] | null = random(this.chooseCell(0));
+		const newCell: ChooseCellItem | null = random(this.chooseCell(0));
 
 		if (newCell && this.energy >= 4) {
 			const newX = newCell[0];
