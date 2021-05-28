@@ -72,6 +72,8 @@ export default class Wolf {
 
 			this.energy = 20;
 		}
+
+		return this;
 	};
 
 	public move = () => {
@@ -88,6 +90,8 @@ export default class Wolf {
 			this.y = newY;
 			this.energy--;
 		}
+
+		return this;
 	};
 
 	public die = () => {
@@ -96,6 +100,8 @@ export default class Wolf {
 
 			_.remove(wolfArr, wolf => this.x === wolf.x && this.y === wolf.y);
 		}
+
+		return this;
 	};
 
 	public eat = () => {
@@ -115,5 +121,7 @@ export default class Wolf {
 
 			this.energy += 30;
 		}
+
+		return this;
 	};
 }

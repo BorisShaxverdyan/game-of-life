@@ -3,14 +3,12 @@ import { edibleHerbArr, grassArr, humanArr, matrix, sheepArr } from "../../../gl
 import * as _ from "lodash";
 import Grass from "../Grass";
 import EdibleHerb from "../EdibleHerb";
+import AbstractEntity from "../AbstractEntity";
+import { ChooseCellItem } from "../AbstractEntity/types";
 
-export default class Human {
-	public x: number;
-	public y: number;
-	public index: number;
+export default class Human extends AbstractEntity {
 	private _health: number;
 	public hunger: number;
-	public directions: [number, number][];
 	public pocketGrass: number[];
 
 	public get health() {
@@ -26,23 +24,11 @@ export default class Human {
 	}
 
 	constructor(x: number, y: number) {
-		this.x = x;
-		this.y = y;
-		this.index = 5;
+		super(x, y, 5);
+
 		this.hunger = 50;
 		this.health = 100;
 		this.pocketGrass = [];
-
-		this.directions = [
-			[this.x - 1, this.y - 1],
-			[this.x, this.y - 1],
-			[this.x + 1, this.y - 1],
-			[this.x - 1, this.y],
-			[this.x + 1, this.y],
-			[this.x - 1, this.y + 1],
-			[this.x, this.y + 1],
-			[this.x + 1, this.y + 1],
-		];
 	}
 
 	private getNewCoordinates = () => {
@@ -58,27 +44,14 @@ export default class Human {
 		];
 	};
 
-	private chooseCell = (index: number | number[]) => {
+	protected chooseCell = (index: number | number[]) => {
 		this.getNewCoordinates();
 
-		const found = [];
-
-		for (let i in this.directions) {
-			let x = this.directions[i][0];
-			let y = this.directions[i][1];
-
-			if (x >= 0 && x < matrix[0].length && y >= 0 && y < matrix.length) {
-				if ((Array.isArray(index) && _.includes(index, matrix[y][x])) || (!Array.isArray(index) && matrix[y][x] === index)) {
-					found.push(this.directions[i].concat(matrix[y][x]));
-				}
-			}
-		}
-
-		return found;
+		return super.chooseCell(index);
 	};
 
 	public multiply = () => {
-		const newCell: [number, number, number] | null = random(this.chooseCell(0));
+		const newCell: ChooseCellItem | null = random(this.chooseCell(0));
 
 		if (newCell && this.hunger >= 80 && this.health === 100) {
 			const newX = newCell[0];
@@ -91,10 +64,12 @@ export default class Human {
 			this.hunger = 30;
 			this.health -= 20;
 		}
+
+		return this;
 	};
 
 	public move = () => {
-		const newCell: [number, number, number] | null = random(this.chooseCell(0));
+		const newCell: ChooseCellItem | null = random(this.chooseCell(0));
 
 		if (newCell) {
 			const newX = newCell[0];
@@ -107,6 +82,8 @@ export default class Human {
 			this.y = newY;
 			this.hunger--;
 		}
+
+		return this;
 	};
 
 	public die = () => {
@@ -119,10 +96,12 @@ export default class Human {
 
 			_.remove(humanArr, human => this.x === human.x && this.y === human.y);
 		}
+
+		return this;
 	};
 
 	public collectGrass = () => {
-		const newCell: [number, number, number] | null = random(this.chooseCell(1));
+		const newCell: ChooseCellItem | null = random(this.chooseCell(1));
 
 		if (newCell && this.pocketGrass.length < 5) {
 			const newX = newCell[0];
@@ -134,17 +113,19 @@ export default class Human {
 			this.pocketGrass.push(1);
 			_.remove(grassArr, grass => newX === grass.x && newY === grass.y);
 
-            this.x = newX;
-            this.y = newY;
+			this.x = newX;
+			this.y = newY;
 
 			this.hunger -= 3;
 		}
+
+		return this;
 	};
 
 	public plantASeed = () => {
-		const newCell: [number, number, number] | null = random(this.chooseCell(0));
+		const newCell: ChooseCellItem | null = random(this.chooseCell(0));
 
-		if (newCell && this.pocketGrass.length > 3) {
+		if (newCell && this.pocketGrass.length >= 3) {
 			const newX = newCell[0];
 			const newY = newCell[1];
 
@@ -152,14 +133,16 @@ export default class Human {
 
 			edibleHerbArr.push(new EdibleHerb(newX, newY));
 
-            this.pocketGrass.splice(0, 3);
+			this.pocketGrass.splice(0, 3);
 		} else {
-            this.collectGrass();
-        }
+			this.collectGrass();
+		}
+
+		return this;
 	};
 
 	public eat = () => {
-		const newCell: [number, number, number] | null = random(this.chooseCell([2, 41, 42, 43, 44]));
+		const newCell: ChooseCellItem | null = random(this.chooseCell([2, 41, 42, 43, 44]));
 
 		if (newCell && this.hunger < 70) {
 			const newX = newCell[0];
@@ -187,6 +170,8 @@ export default class Human {
 					this.hunger += 15;
 					_.remove(edibleHerbArr, edibleHerb => newX === edibleHerb.x && newY === edibleHerb.y);
 					break;
+				default:
+					this.plantASeed();
 			}
 
 			matrix[this.y][this.x] = 0;
@@ -194,14 +179,12 @@ export default class Human {
 
 			this.x = newX;
 			this.y = newY;
-
-			if (this.hunger < 100) {
-				this.plantASeed();
-			}
 		}
 
 		if (this.hunger >= 90 && this.health < 100) {
 			this.health += 20;
 		}
+
+		return this;
 	};
 }

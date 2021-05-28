@@ -1,0 +1,1 @@
+export type ChooseCellItem = [number, number, number];

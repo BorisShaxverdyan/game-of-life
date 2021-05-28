@@ -87,36 +87,13 @@ export const setInitialEntities = (counts: CountsType) => {
 };
 
 export const updateEntities = () => {
-	grassArr.map(grass => {
-		grass.multiply();
-	});
+	grassArr.map(grass => grass.multiply());
 
-	sheepArr.map(sheep => {
-		sheep.move();
-		sheep.eat();
-		sheep.multiply();
-		sheep.die();
-		sheep.energy--;
-	});
+	sheepArr.map(sheep => sheep.move().eat().multiply().die());
 
-	wolfArr.map(wolf => {
-		wolf.move();
-		wolf.eat();
-		wolf.multiply();
-		wolf.die();
-		wolf.energy--;
-	});
+	wolfArr.map(wolf => wolf.move().eat().multiply().die());
 
-	edibleHerbArr.map(edibleHerb => {
-		edibleHerb.grow();
-	});
+	edibleHerbArr.map(edibleHerb => edibleHerb.grow());
 
-	humanArr.map(human => {
-		human.eat();
-		human.move();
-		human.plantASeed();
-		human.multiply();
-		human.die();
-		human.hunger--;
-	});
+	humanArr.map(human => human.eat().move().plantASeed().multiply().die());
 };
