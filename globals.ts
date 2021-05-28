@@ -1,9 +1,12 @@
+import App from "./app/App";
 import EdibleHerb from "./app/entities/EdibleHerb";
 import Grass from "./app/entities/Grass";
 import Human from "./app/entities/Human";
 import Sheep from "./app/entities/Sheep";
 import Wolf from "./app/entities/Wolf";
 import { random } from "./helpers";
+
+export const app = new App();
 
 export type MatrixType = number[][];
 

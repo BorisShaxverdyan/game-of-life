@@ -1,38 +1,37 @@
 import * as express from "express";
 import * as http from "http";
 import { Server } from "socket.io";
-import { generateMatrix, matrix, setInitialEntities, updateEntities } from "./globals";
+import { app, generateMatrix, matrix, setInitialEntities, updateEntities } from "./globals";
+import { config } from "./helpers";
 
-// #region Server stuff
-const port = 3000;
+app.init();
 
-const app = express();
-const server = http.createServer(app);
+// #region server stuff
+const port = config("app.port");
 
-app.use(express.static("public"));
+const appServer = express();
+const server = http.createServer(appServer);
 
-app.get("/", (req: any, res: any) => {
-	res.sendFile(__dirname + "/public/index.html");
-});
+appServer.use(express.static("public"));
 
-server.listen(port, function () {
-	console.log(`Application url: http://localhost:${port}/\n`);
-});
+appServer.get("/", ({ res }) => res.sendFile(__dirname + "/public/index.html"));
+
+server.listen(port, () => console.log(`Application url: http://localhost:${port}/\n`));
 // #endregion
 
-// #region socket connection
-const io = new Server(server);
-
 // #region game
-generateMatrix(25, 25);
+generateMatrix(config("game.matrix.width"), config("game.matrix.height"));
+
 setInitialEntities({
 	grass: 50,
 	sheep: 10,
 	wolf: 2,
 	edibleHerb: 0,
-	human: 2
+	human: 2,
 });
-// #endregion
+
+// #region socket connection
+const io = new Server(server);
 
 io.on("connection", socket => {
 	console.log("connected: ", socket.id);
@@ -43,6 +42,7 @@ io.on("connection", socket => {
 		socket.emit("data", {
 			matrix,
 		});
-	}, 500);
+	}, config("app.frame"));
 });
+// #endregion
 // #endregion

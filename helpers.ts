@@ -1,4 +1,5 @@
 import { random as randomLodash, sample } from "lodash";
+import Config from "./app/services/Config";
 
 /**
  * Get random integer from min to max - random(min, max)
@@ -20,3 +21,5 @@ export const random = (...args: Array<any>) => {
 
 	throw Error("Wrong arguments is given.");
 };
+
+export const config = (key: string, value?: any) => (value ? Config.set(key, value) : Config.get(key));
