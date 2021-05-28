@@ -1,30 +1,16 @@
 import * as _ from "lodash";
-import { matrix, sheepArr, grassArr, edibleHerbArr } from "../../../globals";
+import { matrix, sheepArr, grassArr, edibleHerbArr, EntityType } from "../../../globals";
+import AbstractEntity from "../AbstractEntity";
+import { ChooseCellItem } from "../AbstractEntity/types";
 import { random } from "./../../../helpers";
 
-export default class Sheep {
-	public x: number;
-	public y: number;
-	public index: number;
+export default class Sheep extends AbstractEntity {
 	public energy: number;
-	public directions: [number, number][];
 
 	constructor(x: number, y: number) {
-		this.x = x;
-		this.y = y;
-		this.index = 2;
-		this.energy = 30;
+		super(x, y, EntityType.Animal, 2);
 
-		this.directions = [
-			[this.x - 1, this.y - 1],
-			[this.x, this.y - 1],
-			[this.x + 1, this.y - 1],
-			[this.x - 1, this.y],
-			[this.x + 1, this.y],
-			[this.x - 1, this.y + 1],
-			[this.x, this.y + 1],
-			[this.x + 1, this.y + 1],
-		];
+		this.energy = 30;
 	}
 
 	private getNewCoordinates = () => {
@@ -40,33 +26,20 @@ export default class Sheep {
 		];
 	};
 
-	private chooseCell = (index: number | number[]) => {
+	protected chooseCell = (index: number | number[], type?: EntityType) => {
 		this.getNewCoordinates();
 
-		const found = [];
-
-		for (let i in this.directions) {
-			let x = this.directions[i][0];
-			let y = this.directions[i][1];
-
-			if (x >= 0 && x < matrix[0].length && y >= 0 && y < matrix.length) {
-				if ((Array.isArray(index) && _.includes(index, matrix[y][x])) || (!Array.isArray(index) && matrix[y][x] === index)) {
-					found.push(this.directions[i].concat(matrix[y][x]));
-				}
-			}
-		}
-
-		return found;
+		return super.chooseCell(index, type);
 	};
 
 	public multiply = () => {
-		const newCell: [number, number] | null = random(this.chooseCell(0));
+		const newCell: ChooseCellItem | null = random(this.chooseCell(0));
 
 		if (newCell && this.energy >= 60) {
 			const newX = newCell[0];
 			const newY = newCell[1];
 
-			matrix[newY][newX] = this.index;
+			matrix[newY][newX][this.type] = this.index;
 
 			sheepArr.push(new Sheep(newX, newY));
 
@@ -77,14 +50,14 @@ export default class Sheep {
 	};
 
 	public move = () => {
-		const newCell: [number, number] | null = random(this.chooseCell(0));
+		const newCell: ChooseCellItem | null = random(this.chooseCell(0));
 
 		if (newCell) {
 			const newX = newCell[0];
 			const newY = newCell[1];
 
-			matrix[this.y][this.x] = 0;
-			matrix[newY][newX] = this.index;
+			matrix[this.y][this.x][this.type] = 0;
+			matrix[newY][newX][this.type] = this.index;
 
 			this.x = newX;
 			this.y = newY;
@@ -96,7 +69,7 @@ export default class Sheep {
 
 	public die = () => {
 		if (this.energy <= 0) {
-			matrix[this.y][this.x] = 0;
+			matrix[this.y][this.x][this.type] = 0;
 
 			_.remove(sheepArr, sheep => this.x === sheep.x && this.y === sheep.y);
 		}
@@ -105,7 +78,7 @@ export default class Sheep {
 	};
 
 	public eat = () => {
-		const newCell: [number, number, number] | null = random(this.chooseCell([1, 40, 41, 42, 43, 44]));
+		const newCell: ChooseCellItem | null = random(this.chooseCell([1, 40, 41, 42, 43, 44], EntityType.Ground));
 
 		if (newCell) {
 			const newX = newCell[0];
@@ -139,8 +112,8 @@ export default class Sheep {
 					break;
 			}
 
-			matrix[this.y][this.x] = 0;
-			matrix[newY][newX] = this.index;
+			matrix[this.y][this.x][this.type] = 0;
+			matrix[newY][newX][this.type] = this.index;
 
 			this.x = newX;
 			this.y = newY;

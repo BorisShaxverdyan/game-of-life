@@ -1,15 +1,17 @@
 import * as _ from "lodash";
-import { matrix } from "../../../globals";
+import { EntityType, matrix } from "../../../globals";
 
 export default abstract class AbstractEntity {
 	public x: number;
 	public y: number;
+	public type: EntityType;
 	public index: number;
 	public directions: [number, number][];
 
-	constructor(x: number, y: number, index: number) {
+	constructor(x: number, y: number, type: EntityType, index: number) {
 		this.x = x;
 		this.y = y;
+		this.type = type;
 		this.index = index;
 
 		this.directions = [
@@ -24,7 +26,11 @@ export default abstract class AbstractEntity {
 		];
 	}
 
-	protected chooseCell(index: number | number[]) {
+	protected chooseCell(index: number | number[], type?: EntityType) {
+		if (!type) {
+			type = this.type;
+		}
+
 		const found = [];
 
 		for (let i in this.directions) {
@@ -32,8 +38,8 @@ export default abstract class AbstractEntity {
 			let y = this.directions[i][1];
 
 			if (x >= 0 && x < matrix[0].length && y >= 0 && y < matrix.length) {
-				if ((Array.isArray(index) && _.includes(index, matrix[y][x])) || (!Array.isArray(index) && matrix[y][x] === index)) {
-					found.push(this.directions[i].concat(matrix[y][x]));
+				if ((Array.isArray(index) && _.includes(index, matrix[y][x][type])) || (!Array.isArray(index) && matrix[y][x][type] === index)) {
+					found.push(this.directions[i].concat(matrix[y][x][type]));
 				}
 			}
 		}

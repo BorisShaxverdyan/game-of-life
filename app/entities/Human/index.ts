@@ -1,5 +1,5 @@
 import { random } from "./../../../helpers";
-import { edibleHerbArr, grassArr, humanArr, matrix, sheepArr } from "../../../globals";
+import { edibleHerbArr, EntityType, grassArr, humanArr, matrix, sheepArr } from "../../../globals";
 import * as _ from "lodash";
 import Grass from "../Grass";
 import EdibleHerb from "../EdibleHerb";
@@ -24,7 +24,7 @@ export default class Human extends AbstractEntity {
 	}
 
 	constructor(x: number, y: number) {
-		super(x, y, 5);
+		super(x, y, EntityType.Animal, 5);
 
 		this.hunger = 50;
 		this.health = 100;
@@ -44,10 +44,10 @@ export default class Human extends AbstractEntity {
 		];
 	};
 
-	protected chooseCell = (index: number | number[]) => {
+	protected chooseCell = (index: number | number[], type?: EntityType) => {
 		this.getNewCoordinates();
 
-		return super.chooseCell(index);
+		return super.chooseCell(index, type);
 	};
 
 	public multiply = () => {
@@ -57,7 +57,7 @@ export default class Human extends AbstractEntity {
 			const newX = newCell[0];
 			const newY = newCell[1];
 
-			matrix[newY][newX] = this.index;
+			matrix[newY][newX][this.type] = this.index;
 
 			humanArr.push(new Human(newX, newY));
 
@@ -75,8 +75,8 @@ export default class Human extends AbstractEntity {
 			const newX = newCell[0];
 			const newY = newCell[1];
 
-			matrix[this.y][this.x] = 0;
-			matrix[newY][newX] = this.index;
+			matrix[this.y][this.x][this.type] = 0;
+			matrix[newY][newX][this.type] = this.index;
 
 			this.x = newX;
 			this.y = newY;
@@ -92,7 +92,7 @@ export default class Human extends AbstractEntity {
 		}
 
 		if (this.health <= 0) {
-			matrix[this.y][this.x] = 0;
+			matrix[this.y][this.x][this.type] = 0;
 
 			_.remove(humanArr, human => this.x === human.x && this.y === human.y);
 		}
@@ -101,35 +101,37 @@ export default class Human extends AbstractEntity {
 	};
 
 	public collectGrass = () => {
-		const newCell: ChooseCellItem | null = random(this.chooseCell(1));
+		const newCell: ChooseCellItem | null = random(this.chooseCell(1, EntityType.Ground));
 
 		if (newCell && this.pocketGrass.length < 5) {
 			const newX = newCell[0];
 			const newY = newCell[1];
 
-			matrix[this.y][this.x] = 0;
-			matrix[newY][newX] = this.index;
+			// FIXME: Only collect grass under human.
+			matrix[this.y][this.x][this.type] = 0;
+			matrix[newY][newX][this.type] = this.index;
 
 			this.pocketGrass.push(1);
+
 			_.remove(grassArr, grass => newX === grass.x && newY === grass.y);
 
 			this.x = newX;
 			this.y = newY;
 
-			this.hunger -= 3;
+			this.hunger--;
 		}
 
 		return this;
 	};
 
 	public plantASeed = () => {
-		const newCell: ChooseCellItem | null = random(this.chooseCell(0));
+		const newCell: ChooseCellItem | null = random(this.chooseCell(0, EntityType.Ground));
 
 		if (newCell && this.pocketGrass.length >= 3) {
 			const newX = newCell[0];
 			const newY = newCell[1];
 
-			matrix[newY][newX] = 40;
+			matrix[newY][newX][EntityType.Ground] = 40;
 
 			edibleHerbArr.push(new EdibleHerb(newX, newY));
 
@@ -142,7 +144,7 @@ export default class Human extends AbstractEntity {
 	};
 
 	public eat = () => {
-		const newCell: ChooseCellItem | null = random(this.chooseCell([2, 41, 42, 43, 44]));
+		const newCell: ChooseCellItem | null = random(this.chooseCell([41, 42, 43, 44], EntityType.Ground).concat(this.chooseCell(2)));
 
 		if (newCell && this.hunger < 70) {
 			const newX = newCell[0];
@@ -174,8 +176,8 @@ export default class Human extends AbstractEntity {
 					this.plantASeed();
 			}
 
-			matrix[this.y][this.x] = 0;
-			matrix[newY][newX] = this.index;
+			matrix[this.y][this.x][this.type] = 0;
+			matrix[newY][newX][this.type] = this.index;
 
 			this.x = newX;
 			this.y = newY;

@@ -8,7 +8,12 @@ import { random } from "./helpers";
 
 export const app = new App();
 
-export type MatrixType = number[][];
+export type MatrixType = [number, number][][];
+
+export enum EntityType {
+	Ground,
+	Animal,
+}
 
 export const matrix: MatrixType = [];
 export const grassArr: Grass[] = [];
@@ -22,14 +27,14 @@ export const generateMatrix = (width: number, height: number): MatrixType => {
 		matrix[y] = [];
 
 		for (let x: number = 0; x < width; x++) {
-			matrix[y][x] = 0;
+			matrix[y][x] = [0, 0];
 		}
 	}
 
 	return matrix;
 };
 
-export const setRandom = (value: number): [number, number] => {
+export const setRandom = (type: EntityType, value: number): [number, number, EntityType] => {
 	let isSetted = false;
 
 	let x: number;
@@ -39,14 +44,14 @@ export const setRandom = (value: number): [number, number] => {
 		x = random(matrix[0].length - 1);
 		y = random(matrix.length - 1);
 
-		if (matrix[y][x] === 0) {
-			matrix[y][x] = value;
+		if (matrix[y][x][type] === 0) {
+			matrix[y][x][type] = value;
 
 			isSetted = true;
 		}
 	}
 
-	return [x, y];
+	return [x, y, type];
 };
 
 type CountsType = {
@@ -59,32 +64,34 @@ type CountsType = {
 
 export const setInitialEntities = (counts: CountsType) => {
 	while (counts.grass) {
-		let coords = setRandom(1);
-		grassArr.push(new Grass(...coords));
+		let coords = setRandom(EntityType.Ground, 1);
+
+		grassArr.push(new Grass(coords[0], coords[1]));
+
 		counts.grass--;
 	}
 
 	while (counts.sheep) {
-		let coords = setRandom(2);
-		sheepArr.push(new Sheep(...coords));
+		let coords = setRandom(EntityType.Animal, 2);
+		sheepArr.push(new Sheep(coords[0], coords[1]));
 		counts.sheep--;
 	}
 
 	while (counts.wolf) {
-		let coords = setRandom(3);
-		wolfArr.push(new Wolf(...coords));
+		let coords = setRandom(EntityType.Animal, 3);
+		wolfArr.push(new Wolf(coords[0], coords[1]));
 		counts.wolf--;
 	}
 
 	while (counts.edibleHerb) {
-		let coords = setRandom(40);
-		edibleHerbArr.push(new EdibleHerb(...coords));
+		let coords = setRandom(EntityType.Ground, 40);
+		edibleHerbArr.push(new EdibleHerb(coords[0], coords[1]));
 		counts.edibleHerb--;
 	}
 
 	while (counts.human) {
-		let coords = setRandom(5);
-		humanArr.push(new Human(...coords));
+		let coords = setRandom(EntityType.Animal, 5);
+		humanArr.push(new Human(coords[0], coords[1]));
 		counts.human--;
 	}
 };

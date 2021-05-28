@@ -1,30 +1,15 @@
 import * as _ from "lodash";
-import { matrix, sheepArr, wolfArr } from "../../../globals";
+import { EntityType, matrix, sheepArr, wolfArr } from "../../../globals";
+import AbstractEntity from "../AbstractEntity";
+import { ChooseCellItem } from "../AbstractEntity/types";
 import { random } from "./../../../helpers";
 
-export default class Wolf {
-	public x: number;
-	public y: number;
-	public index: number;
+export default class Wolf extends AbstractEntity {
 	public energy: number;
-	public directions: [number, number][];
 
 	constructor(x: number, y: number) {
-		this.x = x;
-		this.y = y;
-		this.index = 3;
+		super(x, y, EntityType.Animal, 3);
 		this.energy = 30;
-
-		this.directions = [
-			[this.x - 1, this.y - 1],
-			[this.x, this.y - 1],
-			[this.x + 1, this.y - 1],
-			[this.x - 1, this.y],
-			[this.x + 1, this.y],
-			[this.x - 1, this.y + 1],
-			[this.x, this.y + 1],
-			[this.x + 1, this.y + 1],
-		];
 	}
 
 	private getNewCoordinates = () => {
@@ -40,33 +25,20 @@ export default class Wolf {
 		];
 	};
 
-	private chooseCell = (index: number) => {
+	protected chooseCell = (index: number | number[], type?: EntityType) => {
 		this.getNewCoordinates();
 
-		const found = [];
-
-		for (let i in this.directions) {
-			let x = this.directions[i][0];
-			let y = this.directions[i][1];
-
-			if (x >= 0 && x < matrix[0].length && y >= 0 && y < matrix.length) {
-				if (matrix[y][x] == index) {
-					found.push(this.directions[i]);
-				}
-			}
-		}
-
-		return found;
+		return super.chooseCell(index, type);
 	};
 
 	public multiply = () => {
-		const newCell: [number, number] | null = random(this.chooseCell(0));
+		const newCell: ChooseCellItem | null = random(this.chooseCell(0));
 
 		if (newCell && this.energy >= 60) {
 			const newX = newCell[0];
 			const newY = newCell[1];
 
-			matrix[newY][newX] = this.index;
+			matrix[newY][newX][this.type] = this.index;
 
 			wolfArr.push(new Wolf(newX, newY));
 
@@ -77,14 +49,14 @@ export default class Wolf {
 	};
 
 	public move = () => {
-		const newCell: [number, number] | null = random(this.chooseCell(0));
+		const newCell: ChooseCellItem | null = random(this.chooseCell(0));
 
 		if (newCell) {
 			const newX = newCell[0];
 			const newY = newCell[1];
 
-			matrix[this.y][this.x] = 0;
-			matrix[newY][newX] = this.index;
+			matrix[this.y][this.x][this.type] = 0;
+			matrix[newY][newX][this.type] = this.index;
 
 			this.x = newX;
 			this.y = newY;
@@ -96,7 +68,7 @@ export default class Wolf {
 
 	public die = () => {
 		if (this.energy <= 0) {
-			matrix[this.y][this.x] = 0;
+			matrix[this.y][this.x][this.type] = 0;
 
 			_.remove(wolfArr, wolf => this.x === wolf.x && this.y === wolf.y);
 		}
@@ -105,14 +77,14 @@ export default class Wolf {
 	};
 
 	public eat = () => {
-		const newCell: [number, number] | null = random(this.chooseCell(2));
+		const newCell: ChooseCellItem | null = random(this.chooseCell(2));
 
 		if (newCell) {
 			const newX = newCell[0];
 			const newY = newCell[1];
 
-			matrix[this.y][this.x] = 0;
-			matrix[newY][newX] = this.index;
+			matrix[this.y][this.x][this.type] = 0;
+			matrix[newY][newX][this.type] = this.index;
 
 			_.remove(sheepArr, sheep => newX === sheep.x && newY === sheep.y);
 

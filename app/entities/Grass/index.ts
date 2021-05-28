@@ -1,4 +1,4 @@
-import { grassArr, matrix } from "../../../globals";
+import { EntityType, grassArr, matrix } from "../../../globals";
 import AbstractEntity from "../AbstractEntity";
 import { ChooseCellItem } from "../AbstractEntity/types";
 import { random } from "./../../../helpers";
@@ -7,7 +7,7 @@ export default class Grass extends AbstractEntity {
 	public energy: number;
 
 	constructor(x: number, y: number) {
-		super(x, y, 1);
+		super(x, y, EntityType.Ground, 1);
 
 		this.energy = 0;
 	}
@@ -21,7 +21,7 @@ export default class Grass extends AbstractEntity {
 			const newX = newCell[0];
 			const newY = newCell[1];
 
-			matrix[newY][newX] = this.index;
+			matrix[newY][newX][this.type] = this.index;
 
 			grassArr.push(new Grass(newX, newY));
 
